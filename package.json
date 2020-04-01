@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "mongoose": ">=5.7.5",
-    "lodash": ">=4.17.12"
+    "lodash": ">=4.17.13"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
