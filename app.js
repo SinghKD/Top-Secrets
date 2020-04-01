@@ -1,4 +1,3 @@
-//jshint esversion:6
 require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -80,7 +79,6 @@ app.get("/auth/google",
 app.get("/auth/google/secrets",
   passport.authenticate('google', { failureRedirect: "/login" }),
   function(req, res) {
-    // Successful authentication, redirect to secrets.
     res.redirect("/secrets");
   });
 
@@ -112,18 +110,21 @@ app.get("/submit", function(req, res){
   }
 });
 
+
+app.get("/logout", function(req, res){
+  req.logout();
+  res.redirect("/");
+});
+
+
+
 app.post("/submit", function(req, res){
-  const submittedSecret = req.body.secret;
-
-//Once the user is authenticated and their session gets saved, their user details are saved to req.user.
-  // console.log(req.user.id);
-
   User.findById(req.user.id, function(err, foundUser){
     if (err) {
       console.log(err);
     } else {
       if (foundUser) {
-        foundUser.secret = submittedSecret;
+        foundUser.secret = req.body.secret;
         foundUser.save(function(){
           res.redirect("/secrets");
         });
@@ -132,10 +133,9 @@ app.post("/submit", function(req, res){
   });
 });
 
-app.get("/logout", function(req, res){
-  req.logout();
-  res.redirect("/");
-});
+
+
+//////////////////////////////////////////  REGISTER  ////////////////////////////////////////////////////////////
 
 app.post("/register", function(req, res){
 
@@ -151,6 +151,10 @@ app.post("/register", function(req, res){
   });
 
 });
+
+
+
+////////////////////////////////////////  LOGIN /////////////////////////////////////////////////////////////////
 
 app.post("/login", function(req, res){
 
@@ -174,9 +178,6 @@ app.post("/login", function(req, res){
 
 
 
-
-
-
 app.listen(3000, function() {
-  console.log("Server started on port 3000.");
+  console.log("Server up and running!");
 });
